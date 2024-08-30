@@ -29,6 +29,20 @@
         "${workspaceRoot}/node_modules/.bin/jest",
         "--runInBand"
       ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "CLI-261",
+      "console": "integratedTerminal",
+      "program": "${workspaceFolder}/node_modules/.bin/ts-node",
+      "args": [
+        "./src/cli/index.ts",
+        "container",
+        "test",
+        "--platform=linux/arm64",
+        "acryldata/datahub-ingestion:v0.11.0.4"
+      ]
     }
   ]
 }

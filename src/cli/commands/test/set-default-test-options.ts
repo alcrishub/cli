@@ -9,14 +9,20 @@ export function setDefaultTestOptions<CommandOptions>(
     .toLowerCase();
 
   delete options['show-vulnerable-paths'];
+  const showVulnPaths = showVulnPathsMapping[svpSupplied] || 'some';
+  const maxVulnPaths =
+    showVulnPaths === 'all' ? undefined : options['max-vulnerable-paths'] ?? defaultMaxVulnPaths;
   return {
     ...options,
     // org fallback to config unless specified
     org: options.org || config.org,
     // making `show-vulnerable-paths` 'some' by default.
-    showVulnPaths: showVulnPathsMapping[svpSupplied] || 'some',
+    showVulnPaths,
+    maxVulnPaths,
   };
 }
+
+const defaultMaxVulnPaths = 20;
 
 const showVulnPathsMapping: Record<string, ShowVulnPaths> = {
   false: 'none',
