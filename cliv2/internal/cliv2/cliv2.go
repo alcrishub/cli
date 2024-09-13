@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"regexp"
 	"slices"
 	"strings"
@@ -22,6 +23,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/snyk/go-application-framework/pkg/configuration"
 	"github.com/snyk/go-application-framework/pkg/instrumentation"
+	"github.com/snyk/go-application-framework/pkg/runtimeinfo"
 	"github.com/snyk/go-application-framework/pkg/utils"
 
 	cli_errors "github.com/snyk/cli/cliv2/internal/errors"
@@ -57,14 +59,10 @@ const (
 	V2_ABOUT   Handler = iota
 )
 
-func NewCLIv2(config configuration.Configuration, debugLogger *log.Logger) (*CLI, error) {
+func NewCLIv2(config configuration.Configuration, debugLogger *log.Logger, ri runtimeinfo.RuntimeInfo) (*CLI, error) {
 	cacheDirectory := config.GetString(configuration.CACHE_PATH)
 
-	v1BinaryLocation, err := cliv1.GetFullCLIV1TargetPath(cacheDirectory)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
+	v1BinaryLocation := filepath.Join(cacheDirectory, ri.GetVersion(), cliv1.GetCLIv1Filename())
 
 	cli := CLI{
 		DebugLogger:      debugLogger,
