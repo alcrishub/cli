@@ -15,9 +15,12 @@ describe('Parallel CLI execution', () => {
       singleTestResult.push(runSnykCLI(`test -d`, { cwd: project.path() }));
     }
 
-    for (let i = 0; i < numberOfParallelExecutions; i++) {
-      const { code } = await singleTestResult[i];
-      expect(code).toBe(1);
-    }
+    const results = await Promise.all(singleTestResult);
+
+    results.forEach((result) => {
+      console.log(result.stdout);
+      console.log(result.stderr);
+      expect(result.code).toBe(1);
+    });
   });
 });
